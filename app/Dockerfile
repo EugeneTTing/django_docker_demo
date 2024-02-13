@@ -33,20 +33,24 @@ RUN chmod +x /usr/src/app/entrypoint.sh
 # Copy the source code into the container.
 COPY . .
 
-# run entrypoint.sh
-ENTRYPOINT ["/usr/src/app/entrypoint.sh"]
-
 # Create a non-privileged user that the app will run under.
 # See https://docs.docker.com/go/dockerfile-user-best-practices/
-# ARG UID=10001
-# RUN adduser \
-#     --disabled-password \
-#     --gecos "" \
-#     --home "/nonexistent" \
-#     --shell "/sbin/nologin" \
-#     --no-create-home \
-#     --uid "${UID}" \
-#     appuser
+ARG UID=10001
+RUN adduser \
+    --disabled-password \
+    --gecos "" \
+    --home "/nonexistent" \
+    --shell "/sbin/nologin" \
+    --no-create-home \
+    --uid "${UID}" \
+    appuser
+
+RUN mkdir /usr/mediafiles
+RUN chown -R appuser:appuser /usr/src/app
+RUN chown -R appuser:appuser /usr/mediafiles
 
 # Switch to the non-privileged user to run the application.
-# USER appuser
+USER appuser
+
+# run entrypoint.sh
+ENTRYPOINT ["/usr/src/app/entrypoint.sh"]
