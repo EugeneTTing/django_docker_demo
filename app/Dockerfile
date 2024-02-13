@@ -1,14 +1,6 @@
-# syntax=docker/dockerfile:1
-
-# Comments are provided throughout this file to help you get started.
-# If you need more help, visit the Dockerfile reference guide at
-# https://docs.docker.com/go/dockerfile-reference/
-
-# Want to help us make this template better? Share your feedback here: https://forms.gle/ybq9Krt8jtBL3iCk7
-
 # Pull base image
-ARG PYTHON_VERSION=3.10.12
-FROM python:${PYTHON_VERSION}-slim as base
+ARG PYTHON_VERSION=3.11.4
+FROM python:${PYTHON_VERSION}-slim-buster as base
 
 # Prevents Python from writing pyc files.
 ENV PYTHONDONTWRITEBYTECODE=1
@@ -19,7 +11,8 @@ ENV PYTHONUNBUFFERED=1
 
 # Install system dependencies
 # netcat used to check status of database
-RUN apt-get update && apt-get install -y netcat-traditional
+RUN apt-get update && \ 
+    apt-get install -y netcat-traditional
 
 # Set working directory
 WORKDIR /usr/src/app
@@ -40,6 +33,9 @@ RUN chmod +x /usr/src/app/entrypoint.sh
 # Copy the source code into the container.
 COPY . .
 
+# run entrypoint.sh
+ENTRYPOINT ["/usr/src/app/entrypoint.sh"]
+
 # Create a non-privileged user that the app will run under.
 # See https://docs.docker.com/go/dockerfile-user-best-practices/
 # ARG UID=10001
@@ -54,7 +50,3 @@ COPY . .
 
 # Switch to the non-privileged user to run the application.
 # USER appuser
-
-
-# run entrypoint.sh
-ENTRYPOINT ["/usr/src/app/entrypoint.sh"]
