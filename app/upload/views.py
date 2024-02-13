@@ -5,6 +5,7 @@ from django.core.files.storage import FileSystemStorage
 def image_upload(request):
     if request.method == "POST" and request.FILES["image_file"]:
         image_file = request.FILES["image_file"]
+        # by default files are saved in path specified by MEDIA_ROOT
         fs = FileSystemStorage()
         filename = fs.save(image_file.name, image_file)
         image_url = fs.url(filename)

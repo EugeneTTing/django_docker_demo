@@ -129,7 +129,13 @@ STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
 MEDIA_URL = "/media/"
-MEDIA_ROOT = BASE_DIR / "mediafiles"
+
+# if in production env (DEBUG = Tur), save files to /usr/mediafiles
+# usr/mediafiles is mounted to a Docker volume
+# else, mediafiles directory is created in host machine, since the
+# /usr/src/app directory in the container is mounted to the host's
+# ./app directory, and mediafiles are save in /usr/src/app/mediafiles
+MEDIA_ROOT = "/usr/mediafiles" if DEBUG else BASE_DIR / "mediafiles"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
