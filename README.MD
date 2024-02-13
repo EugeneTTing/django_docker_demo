@@ -22,6 +22,8 @@ When in the devlopment environemnt, a new Django app in the current project can 
 
 This will cause the new app's associated directory to be created in the `./app` directory on the host machine. The directory and the files inside may be owned by the root user and therefore prevent editing. Th epermission should be changed by changing the ownership of the new files with: `chown -R <owner>:<group> <newapp>`.
 
+This may be caused by the `web` container running as root. However, changing the Dockerfile such that the container runs as a non-root user will cause an error when trying to start a new app.
+
 ### Migrate databases
 
 Database migrations can be executed with the following command.
